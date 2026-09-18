@@ -2524,6 +2524,13 @@ class AapService : Service() {
         releaseBootWakeLock()
 
         wifiLauncherManager.stop(WifiLauncherStopSequence.BEFORE_HOTSPOT_DISABLE)
+        val settings = App.provide(this).settings
+        val isHotspotMode = settings.wifiConnectionMode == WifiLauncherMode.NATIVE &&
+                            settings.nativeApStrategy == NativeStrategy.HOTSPOT
+        if (settings.disableHotspotOnExit && isHotspotMode) {
+            AppLog.i("AapService: Disable hotspot on exit enabled — turning off hotspot")
+            HotspotManager.setHotspotEnabled(this, false)
+        }
         // The access point is left up here. Taking it down serves one purpose, putting the phone
         // off the network, and onDisconnected already decides that through UserExitHotspotPolicy:
         // it restarts the access point rather than leaving it down, and remembers a device that

@@ -2047,6 +2047,10 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("native-wifi-version-exchange", false)
         set(value) = prefs.edit().putBoolean("native-wifi-version-exchange", value).apply()
 
+    var disableHotspotOnExit: Boolean
+        get() = prefs.getBoolean("disable-hotspot-on-exit", false)
+        set(value) = prefs.edit().putBoolean("disable-hotspot-on-exit", value).apply()
+
     // Whether ServiceDiscoveryResponse carries a ConnectionConfiguration: the ping and TCP
     // parameters Android Auto lets a head unit ask for.
     //

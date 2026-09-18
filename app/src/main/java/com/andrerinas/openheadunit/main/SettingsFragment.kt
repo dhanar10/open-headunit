@@ -187,6 +187,7 @@ class SettingsFragment : Fragment() {
     private var pendingWifiConnectionMode: WifiLauncherMode? = null
     private var pendingHelperConnectionStrategy: HelperStrategy? = null
     private var pendingAutoEnableHotspot: Boolean? = null
+    private var pendingDisableHotspotOnExit: Boolean? = null
     private var pendingWaitForWifi: Boolean? = null
     private var pendingWaitForWifiTimeout: Int? = null
     private var pendingBluetoothManagerServiceName: String? = null
@@ -382,6 +383,7 @@ class SettingsFragment : Fragment() {
         pendingNativeAaIgnoreExternalBt = settings.nativeAaIgnoreExternalBt
         pendingExternalBtZbtTransport = settings.externalBtZbtTransport
         pendingNativeWifiVersionExchange = settings.nativeWifiVersionExchange
+        pendingDisableHotspotOnExit = settings.disableHotspotOnExit
         pendingNativeAaCompleteHfpSlc = settings.nativeAaCompleteHfpSlc
         pendingAnnounceConnectionConfiguration = settings.announceConnectionConfiguration
         pendingNativeApTransport = settings.nativeApStrategy
@@ -515,6 +517,7 @@ class SettingsFragment : Fragment() {
         pendingNativeAaIgnoreExternalBt = settings.nativeAaIgnoreExternalBt
         pendingExternalBtZbtTransport = settings.externalBtZbtTransport
         pendingNativeWifiVersionExchange = settings.nativeWifiVersionExchange
+        pendingDisableHotspotOnExit = settings.disableHotspotOnExit
         pendingNativeAaCompleteHfpSlc = settings.nativeAaCompleteHfpSlc
         pendingAnnounceConnectionConfiguration = settings.announceConnectionConfiguration
         pendingNativeApTransport = settings.nativeApStrategy
@@ -757,6 +760,7 @@ class SettingsFragment : Fragment() {
         pendingNativeAaIgnoreExternalBt?.let { settings.nativeAaIgnoreExternalBt = it }
         pendingExternalBtZbtTransport?.let { settings.externalBtZbtTransport = it }
         pendingNativeWifiVersionExchange?.let { settings.nativeWifiVersionExchange = it }
+        pendingDisableHotspotOnExit?.let { settings.disableHotspotOnExit = it }
         pendingNativeAaCompleteHfpSlc?.let { settings.nativeAaCompleteHfpSlc = it }
         pendingAnnounceConnectionConfiguration?.let { settings.announceConnectionConfiguration = it }
         pendingNativeApTransport?.let { settings.nativeApStrategy = it }
@@ -879,6 +883,7 @@ class SettingsFragment : Fragment() {
                         pendingAutoKillOemApps != settings.autoKillOemApps ||
                         pendingRaiseProjectionDuringCall != settings.raiseProjectionDuringCall ||
                         pendingAutoEnableHotspot != settings.autoEnableHotspot ||
+                        pendingDisableHotspotOnExit != settings.disableHotspotOnExit ||
                         pendingFakeSpeed != settings.fakeSpeed ||
                         pendingWifiConnectionMode != settings.wifiConnectionMode ||
                         pendingHelperConnectionStrategy != settings.helperConnectionStrategy ||
@@ -1144,6 +1149,7 @@ class SettingsFragment : Fragment() {
                 // belongs here. It used to render only on mode 1 and mode 2 strategy 4, which left
                 // the setting governing this route unreachable from the screen that selects it.
                 addHotspotToggle(items)
+                addDisableHotspotOnExitToggle(items)
                 addHotspotBandSetting(items)
                 if (pendingHotspotBandPreference() != HotspotBandPreference.FORCE_2_4GHZ) {
                     addFiveGhzChannelSetting(items)
@@ -4352,6 +4358,21 @@ class SettingsFragment : Fragment() {
                     checkChanges()
                     updateSettingsList()
                 }
+            }
+        ))
+    }
+
+
+    private fun addDisableHotspotOnExitToggle(items: MutableList<SettingItem>) {
+        items.add(SettingItem.ToggleSettingEntry(
+            stableId = "disableHotspotOnExit",
+            nameResId = R.string.disable_hotspot_on_exit,
+            descriptionResId = R.string.disable_hotspot_on_exit_description,
+            isChecked = pendingDisableHotspotOnExit ?: false,
+            onCheckedChanged = { isChecked ->
+                pendingDisableHotspotOnExit = isChecked
+                checkChanges()
+                updateSettingsList()
             }
         ))
     }
